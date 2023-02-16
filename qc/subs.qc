@@ -174,30 +174,49 @@ local entity		stemp;
 
 void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove =
 {
-local vector	destdelta;
-local float		len, traveltime;
+    float my_time;
+    vector destdelta;
+    float len, traveltime;
 
-	if (!tspeed)
-		objerror("No speed is defined!");
+    if (!tspeed)
+        objerror("No speed is defined!");
+
+    if (self.movetype == MOVETYPE_PUSH) {
+        my_time = self.ltime;
+    } else {
+        my_time = time;
+    }
+
+    self.think = SUB_CalcAngleMoveDone;
+    self.finalangle = destangle;
+    self.think1 = func;
+
+    if (destangle == self.angles) {
+        self.avelocity = '0 0 0';
+        self.nextthink = my_time + 0.1;
+        return;
+    }
 
 // set destdelta to the vector needed to move
-	destdelta = destangle - self.angles;
+    destdelta = destangle - self.angles;
 
-// calculate length of vector
-	len = vlen (destdelta);
+// calculate length ofvector
+    len = vlen(destdelta);
 
 // divide by speed to get time to reach dest
-	traveltime = len / tspeed;
+    traveltime = len / tspeed;
+
+    if (traveltime < 0.1) {
+        self.velocity = '0 0 0';
+        self.nextthink = my_time + 0.1;
+        return;
+    }
 
 // set nextthink to trigger a think when dest is reached
-	self.nextthink = self.ltime + traveltime;
+    self.nextthink = my_time + traveltime;
 
 // scale the destdelta vector by the time spent traveling to get velocity
-	self.avelocity = destdelta * (1 / traveltime);
-
-	self.think1 = func;
-	self.finalangle = destangle;
-	self.think = SUB_CalcAngleMoveDone;
+    self.avelocity = destdelta * (1 / traveltime);
 };
 
 /*

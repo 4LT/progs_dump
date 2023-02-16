@@ -3465,3 +3465,53 @@ sounds(choices) : "Sound style" : 0 =
 		1 : "Not in coop" : 0
 	]
 ]
+
+@baseclass = MoverSounds
+[
+    sounds(choices) : "Sounds" : 0 =
+    [
+        0 : "Silent"
+        1 : "DOOR Stone"
+        2 : "DOOR Machine"
+        3 : "DOOR Stone Chain"
+        4 : "DOOR Screechy Metal"
+        5 : "DOOR/SEC Medieval"
+        6 : "DOOR/SEC Metal"
+        7 : "DOOR/SEC Base"
+        8 : "PLAT Base"
+        9 : "PLAT Chain"
+        10 : "TRAIN Ratchet"
+    ]
+    noise1(string) : "Stop noise"
+    noise2(string) : "Move noise"
+]
+
+@baseclass color(255 128 0) model({{
+    (model != undefined) -> ":" + model,
+    undefined
+}}) = FxModel
+[
+    model(string) : "Model filename"
+    angles(string) : "Facing"
+]
+
+@PointClass base(Appearflags, Targetname, FxModel) = fx_model_toggle : "Toggleable model"
+[
+    map(string) : "Secondary model filename"
+    avelocity(string) : "Angular velocity"
+    spawnflags(flags) =
+    [
+        1 : "Static"
+    ]
+]
+
+@PointClass base(Appearflags, Targetname, FxModel, MoverSounds) = fx_model_train : "Moving model"
+[
+    speed(float) : "Speed" : "100"
+    noise3(string) : "Rotate sound"
+    target(target_destination) : "Destination"
+    spawnflags(flags) =
+    [
+        1 : "Teleport to start"
+    ]
+]

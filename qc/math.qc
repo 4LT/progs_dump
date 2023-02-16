@@ -207,3 +207,28 @@ vector(vector ang) normalizeAngles180 = {
     */
     return ang;
 };
+
+float MIN_ANG = -180;
+float MAX_ANG = 180;
+
+// Like normalizeAngles180, but keeps pitch between -90 and 90
+vector(vector in) normalize_euler_angles = {
+    vector out;
+    float flip = 0;
+    out_x = wrap(in_x, MIN_ANG, MAX_ANG);
+    
+    if (out_x < -90 || out_x > 90) {
+        if (out_x < -90) {
+            out_x = -180 - out_x;
+        } else {
+            out_x = 180 - out_x;
+        }
+        
+        flip = 180;
+    }
+
+    out_y = wrap(in_y + flip, MIN_ANG, MAX_ANG);
+    out_z = wrap(in_z + flip, MIN_ANG, MAX_ANG);
+
+    return out;
+};
