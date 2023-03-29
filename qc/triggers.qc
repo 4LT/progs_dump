@@ -766,6 +766,11 @@ void() trigger_skill_touch =
 	cvar_set ("skill", self.message);
 };
 
+void() trigger_skill_use =
+{
+	cvar_set ("skill", self.message);
+};
+
 /*QUAKED trigger_setskill (.5 .5 .5) ? X X X X X X X X NOT_ON_EASY NOT_ON_NORMAL NOT_ON_HARD_OR_NIGHTMARE NOT_IN_DEATHMATCH NOT_IN_COOP NOT_IN_SINGLEPLAYER X NOT_ON_HARD_ONLY NOT_ON_NIGHTMARE_ONLY
 sets skill level to the value of "message".
 Only used on start map.
@@ -777,6 +782,12 @@ void() trigger_setskill =
 
 	InitTrigger ();
 	self.touch = trigger_skill_touch;
+
+    if (self.targetname == "") {
+        self.solid = SOLID_NOT;
+    } else {
+        self.use = trigger_skill_use;
+    }
 
 	SUB_CheckWaiting();
 };
